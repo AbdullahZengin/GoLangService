@@ -1,10 +1,10 @@
 package main
 
 import (
+	"./app"
 	"fmt"
-	"net/http"
-
 	"github.com/gorilla/mux"
+	"net/http"
 )
 
 func Anasayfa(w http.ResponseWriter, r *http.Request) {
@@ -16,6 +16,9 @@ func handleRequest() {
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.HandleFunc("/", Anasayfa).Methods("GET")
+	router.HandleFunc("/anasayfa", Anasayfa).Methods("GET")
+
+	router.Use(app.JwtAuthentication)
 	http.ListenAndServe(":5555", router)
 }
 
