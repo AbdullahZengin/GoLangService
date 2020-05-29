@@ -18,7 +18,7 @@ func handleRequest() {
 	router.HandleFunc("/", Anasayfa).Methods("GET")
 	router.HandleFunc("/anasayfa", Anasayfa).Methods("GET")
 
-	router.Use(app.JwtAuthentication)
+	router.Use(app.LoginMiddleWare)
 	http.ListenAndServe(":5555", router)
 }
 
