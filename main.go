@@ -23,6 +23,6 @@ func handleRequest() {
 }
 
 func main() {
-	fmt.Println("Go Dili İle İlk Service Uygulaması Başlatılıyor...")
+	fmt.Println("Golang ile rest service uygulaması başlatılıyor...\nPort: 5555")
 	handleRequest()
 }
