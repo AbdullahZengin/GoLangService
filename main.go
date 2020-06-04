@@ -3,6 +3,7 @@ package main
 import (
 	"./app"
 	"./models"
+	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
@@ -15,11 +16,17 @@ func Anasayfa(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Anasayfa Servisi Çağırıldı")
 }
 
+func returnAllArticles(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Makaleler endpoint'i çağırıldı.")
+	json.NewEncoder(w).Encode(Articles)
+}
+
 func handleRequest() {
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.HandleFunc("/", Anasayfa).Methods("GET")
 	router.HandleFunc("/anasayfa", Anasayfa).Methods("GET")
+	router.HandleFunc("/TumMakaleleriGetir", returnAllArticles).Methods("GET")
 	router.Use(app.LoginMiddleWare)
 	http.ListenAndServe(":5555", router)
 
