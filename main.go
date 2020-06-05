@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -21,12 +22,23 @@ func returnAllArticles(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(Articles)
 }
 
+func createNewArticle(w http.ResponseWriter, r *http.Request) {
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	var article models.Article
+	json.Unmarshal(reqBody, &article)
+
+	Articles = append(Articles, article)
+
+	json.NewEncoder(w).Encode(article)
+}
+
 func handleRequest() {
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.HandleFunc("/", Anasayfa).Methods("GET")
 	router.HandleFunc("/anasayfa", Anasayfa).Methods("GET")
 	router.HandleFunc("/TumMakaleleriGetir", returnAllArticles).Methods("GET")
+	router.HandleFunc("/YeniMakale", createNewArticle).Methods("POST")
 	router.Use(app.LoginMiddleWare)
 	http.ListenAndServe(":5555", router)
 
