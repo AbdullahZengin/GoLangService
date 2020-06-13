@@ -32,6 +32,17 @@ func createNewArticle(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(article)
 }
 
+func returnSingleArticle(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	key := vars["id"]
+	
+	for _, article := range Articles {
+		if article.Id == key {
+			json.NewEncoder(w).Encode(article)
+		}
+	}
+}
+
 func handleRequest() {
 	router := mux.NewRouter().StrictSlash(true)
 
@@ -39,6 +50,8 @@ func handleRequest() {
 	router.HandleFunc("/anasayfa", Anasayfa).Methods("GET")
 	router.HandleFunc("/TumMakaleleriGetir", returnAllArticles).Methods("GET")
 	router.HandleFunc("/YeniMakale", createNewArticle).Methods("POST")
+	router.HandleFunc("/MakaleGetir/{id}", returnSingleArticle).Methods("GET")
+
 	router.Use(app.LoginMiddleWare)
 	http.ListenAndServe(":5555", router)
 
