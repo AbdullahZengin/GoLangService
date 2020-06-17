@@ -43,6 +43,22 @@ func returnSingleArticle(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func deleteArticle(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+
+	for index, article := range Articles {
+
+		if article.Id == id {
+
+			Articles = append(Articles[:index], Articles[index+1:]...)
+		}
+	}
+
+}
+
 func handleRequest() {
 	router := mux.NewRouter().StrictSlash(true)
 
@@ -51,6 +67,7 @@ func handleRequest() {
 	router.HandleFunc("/TumMakaleleriGetir", returnAllArticles).Methods("GET")
 	router.HandleFunc("/YeniMakale", createNewArticle).Methods("POST")
 	router.HandleFunc("/MakaleGetir/{id}", returnSingleArticle).Methods("GET")
+	router.HandleFunc("/MakaleSil/{id}", deleteArticle).Methods("DELETE")
 
 	router.Use(app.LoginMiddleWare)
 	http.ListenAndServe(":5555", router)
